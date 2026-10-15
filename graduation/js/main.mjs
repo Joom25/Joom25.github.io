@@ -5,11 +5,13 @@ const $ = (id) => document.getElementById(id);
 
 const group = resolveGroup(location.search, content);
 document.documentElement.dataset.skin = group.skin;
+$('title-text').textContent = group.title;
+$('rsvp-submit').textContent = group.submitLabel;
 
 // 1. Hero
-if (content.heroPhoto) {
-  $('hero-photo').src = content.heroPhoto;
-  $('hero-photo').alt = content.heroAlt;
+if (group.heroPhoto) {
+  $('hero-photo').src = group.heroPhoto;
+  $('hero-photo').alt = group.heroAlt;
 } else {
   $('hero-photo').hidden = true;
 }
@@ -92,6 +94,6 @@ form.addEventListener('submit', async (event) => {
     console.error(err);
     $('form-error').textContent = 'Gửi chưa được, bạn thử lại giúp Dũng nhé.';
     submit.disabled = false;
-    submit.textContent = 'Gửi ☕';
+    submit.textContent = group.submitLabel;
   }
 });

@@ -1,8 +1,11 @@
 // Pure, DOM-free helpers so they can run under `node --test`.
 
 export const TIME_UNSET = 'Giờ sẽ được cập nhật sớm';
+export const DEFAULT_TITLE = 'dung@aicf:~/graduation';
+export const DEFAULT_SUBMIT = 'Gửi ☕';
 
-// Returns what the link decides: group key, greeting (with {giờ} filled), time text and skin.
+// Returns what the link decides: group key, greeting (with {giờ} filled), time text, skin,
+// and the optional per-group hero photo and alt text, title-bar text and submit label (with defaults).
 export function resolveGroup(search, content) {
   const key = (new URLSearchParams(search).get('g') || '').trim().toLowerCase();
   const groups = content.groups ?? {};
@@ -15,7 +18,11 @@ export function resolveGroup(search, content) {
     group: group ? key : 'none',
     greeting,
     time: slot || TIME_UNSET,
-    skin: group?.skin === 'boot' ? 'boot' : 'coffee',
+    skin: ['boot', 'moon'].includes(group?.skin) ? group.skin : 'coffee',
+    heroPhoto: group?.heroPhoto || content.heroPhoto || '',
+    heroAlt: group?.heroAlt || content.heroAlt || '',
+    title: group?.title || DEFAULT_TITLE,
+    submitLabel: group?.submitLabel || DEFAULT_SUBMIT,
   };
 }
 

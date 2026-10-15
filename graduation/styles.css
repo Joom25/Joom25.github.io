@@ -1,4 +1,4 @@
-/* Tokens from DESIGN.md. Two skins: Coffee.exe (default) and Boot Sequence ([data-skin="boot"]). */
+/* Tokens from DESIGN.md. Three skins: Coffee.exe (default), Boot Sequence ([data-skin="boot"]) and Moonlight ([data-skin="moon"]). */
 :root {
   --bg: #000000;
   --surface: #071014;
@@ -187,3 +187,20 @@ textarea { resize: vertical; }
 [data-skin="boot"] .info-row .key { display: inline; color: var(--primary); flex: none; width: 56px; }
 [data-skin="boot"] .info-row .value::before,
 [data-skin="boot"] .info-row .value::after { content: '"'; color: var(--muted); font-family: var(--mono); font-weight: 400; }
+
+/* Moonlight skin (girlfriend link): Coffee.exe layout with the moon-* palette, no cyan. */
+[data-skin="moon"] {
+  --bg: #05070F;
+  --surface: #0D1222;
+  --text: #E3E9FF;
+  --muted: #7E8AB3;
+  --primary: #9DB4FF;
+  --accent: #C9B8FF;
+  --on-accent: #05070F;
+  --hairline: #9DB4FF22;
+  --frame-border: #9DB4FF33;
+}
+[data-skin="moon"] .title-bar i { background: var(--accent); }
+[data-skin="moon"] .role { color: var(--accent); }
+[data-skin="moon"] .hero-photo { box-shadow: 0 0 32px 4px #C9B8FF26; }
+[data-skin="moon"] .button-primary { border-radius: 9999px; }

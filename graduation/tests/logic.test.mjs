@@ -1,21 +1,29 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET } from '../js/logic.mjs';
+import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET, DEFAULT_TITLE, DEFAULT_SUBMIT } from '../js/logic.mjs';
 import realContent from '../js/content.mjs';
 
+const HER = '21-06-2026_10.8039n_106.7133e';
 const content = {
   ceremonyTime: '08:00',
+  heroPhoto: 'assets/hero.svg',
+  heroAlt: 'Ảnh Dũng',
   neutralGreeting: 'Xin chào!',
   groups: {
     family: { greeting: 'Gặp cả nhà lúc {giờ}.', slot: '07:30', skin: 'coffee' },
     coworkers: { greeting: 'Gặp anh/chị lúc {giờ}.', slot: '09:00', skin: 'boot' },
     friends: { greeting: 'Ghé lúc {giờ} nha.', slot: '', skin: 'coffee' },
+    [HER]: {
+      greeting: '{tên em} ơi, đến lúc {giờ} nhé.', slot: '06:45', skin: 'moon',
+      heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜',
+    },
   },
 };
+const defaults = { heroPhoto: 'assets/hero.svg', heroAlt: 'Ảnh Dũng', title: DEFAULT_TITLE, submitLabel: DEFAULT_SUBMIT };
 
 test('group link: coworkers gets Boot Sequence, own greeting and slot', () => {
   assert.deepEqual(resolveGroup('?g=coworkers', content), {
-    group: 'coworkers', greeting: 'Gặp anh/chị lúc 09:00.', time: '09:00', skin: 'boot',
+    group: 'coworkers', greeting: 'Gặp anh/chị lúc 09:00.', time: '09:00', skin: 'boot', ...defaults,
   });
 });
 
@@ -26,9 +34,9 @@ test('group link: family gets Coffee.exe', () => {
 });
 
 test('unknown or missing group: Coffee.exe, neutral greeting, ceremony time', () => {
-  for (const search of ['?g=xyz', '', '?g=', '?g=toString', '?g=__proto__']) {
+  for (const search of ['?g=xyz', '', '?g=', '?g=toString', '?g=__proto__', '?g=21-06-2026']) {
     assert.deepEqual(resolveGroup(search, content), {
-      group: 'none', greeting: 'Xin chào!', time: '08:00', skin: 'coffee',
+      group: 'none', greeting: 'Xin chào!', time: '08:00', skin: 'coffee', ...defaults,
     }, search);
   }
 });
@@ -47,6 +55,38 @@ test('real content.mjs resolves every group without a leftover {giờ}', () => {
     assert.ok(r.greeting && !r.greeting.includes('{giờ}'), g);
   }
   assert.equal(resolveGroup('?g=coworkers', realContent).skin, 'boot');
+  const her = resolveGroup('?g=21-06-2026_10.8039N_106.7133E', realContent);
+  assert.equal(her.skin, 'moon');
+  assert.ok(!her.greeting.includes('{giờ}'));
+  assert.equal(her.title, 'dung@aicf:~/for-you');
+  assert.equal(her.submitLabel, 'Em sẽ đến 💜');
+  assert.equal(her.heroPhoto, 'assets/hero-us.svg');
+  assert.equal(her.heroAlt, 'Ảnh Dũng và em');
+});
+
+test('her link: Moonlight, her greeting, slot, photo, title and button, any letter case', () => {
+  for (const search of ['?g=21-06-2026_10.8039N_106.7133E', '?g=21-06-2026_10.8039n_106.7133e']) {
+    assert.deepEqual(resolveGroup(search, content), {
+      group: HER, greeting: '{tên em} ơi, đến lúc 06:45 nhé.', time: '06:45', skin: 'moon',
+      heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜',
+    }, search);
+  }
+});
+
+test('other groups keep default photo, title bar and "Gửi ☕"', () => {
+  for (const g of ['family', 'friends', 'coworkers']) {
+    const { heroPhoto, heroAlt, title, submitLabel } = resolveGroup(`?g=${g}`, content);
+    assert.deepEqual({ heroPhoto, heroAlt, title, submitLabel }, defaults, g);
+  }
+});
+
+test('her photo unset: falls back to the default hero photo', () => {
+  const c = { ...content, groups: { [HER]: { ...content.groups[HER], heroPhoto: '' } } };
+  assert.equal(resolveGroup(`?g=${HER}`, c).heroPhoto, 'assets/hero.svg');
+});
+
+test('unknown skin value falls back to coffee', () => {
+  assert.equal(resolveGroup('?g=x', { groups: { x: { skin: 'neon' } } }).skin, 'coffee');
 });
 
 test('RSVP invalid: blank name and no choice give Vietnamese errors', () => {
@@ -93,8 +133,9 @@ test('RSVP failure: missing URL, network, HTTP and script errors all throw', asy
 
 test('content missing fields: no throw, empty slot still shows placeholder (no ceremonyTime fallback)', () => {
   const stripped = { ceremonyTime: '08:00', groups: { family: { skin: 'coffee' } } };
-  assert.deepEqual(resolveGroup('?g=family', stripped), { group: 'family', greeting: '', time: TIME_UNSET, skin: 'coffee' });
-  assert.deepEqual(resolveGroup('?g=x', {}), { group: 'none', greeting: '', time: TIME_UNSET, skin: 'coffee' });
+  const bare = { heroPhoto: '', heroAlt: '', title: DEFAULT_TITLE, submitLabel: DEFAULT_SUBMIT };
+  assert.deepEqual(resolveGroup('?g=family', stripped), { group: 'family', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare });
+  assert.deepEqual(resolveGroup('?g=x', {}), { group: 'none', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare });
   assert.deepEqual(visibleSections({}), { story: false, photos: false });
 });
 

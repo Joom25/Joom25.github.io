@@ -21,7 +21,9 @@ export default {
   // Lời chào khi link không có nhóm hoặc nhóm không đúng
   neutralGreeting: 'Xin chào! Trân trọng mời bạn đến chung vui trong ngày Dũng nhận bằng Cử nhân Trí tuệ Nhân tạo.',
 
-  // skin: 'coffee' (Coffee.exe) hoặc 'boot' (Boot Sequence). slot: giờ đón, ví dụ '07:30'
+  // skin: 'coffee' (Coffee.exe), 'boot' (Boot Sequence) hoặc 'moon' (Moonlight). slot: giờ đón, ví dụ '07:30'
+  // Không bắt buộc: heroPhoto (ảnh riêng, để '' thì dùng ảnh chính), heroAlt (mô tả ảnh riêng), title (chữ trên thanh tiêu đề),
+  // submitLabel (chữ trên nút gửi RSVP). Bỏ trống thì dùng mặc định.
   groups: {
     family: {
       greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
@@ -42,6 +44,17 @@ export default {
       greeting: 'Trân trọng kính mời anh/chị đến dự lễ tốt nghiệp Cử nhân Trí tuệ Nhân tạo của Dũng. Rất mong được gặp anh/chị lúc {giờ}.',
       slot: '',
       skin: 'boot',
+    },
+    // Link riêng cho em: ?g=21-06-2026_10.8039N_106.7133E (không phân biệt hoa thường).
+    // Nhớ thay {tên em} bằng tên gọi của em.
+    '21-06-2026_10.8039n_106.7133e': {
+      greeting: '{tên em} ơi, ngày anh tốt nghiệp, người anh muốn thấy đầu tiên dưới khán đài là em. Em đến sớm một chút lúc {giờ} nhé, anh muốn có tấm ảnh đầu tiên với em.',
+      slot: '',
+      skin: 'moon',
+      heroPhoto: 'assets/hero-us.svg',
+      heroAlt: 'Ảnh Dũng và em',
+      title: 'dung@aicf:~/for-you',
+      submitLabel: 'Em sẽ đến 💜',
     },
   },
 
