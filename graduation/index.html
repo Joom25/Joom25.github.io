@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi" data-skin="coffee">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Thư mời tốt nghiệp · Huỳnh Anh Dũng</title>
+  <meta name="description" content="Thư mời dự lễ tốt nghiệp của Huỳnh Anh Dũng">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="js/main.mjs"></script>
+</head>
+<body>
+  <main class="window">
+    <div class="title-bar mono" aria-hidden="true"><i></i><i></i><i></i><span>dung@aicf:~/graduation</span></div>
+
+    <div class="window-body">
+      <!-- 1. Hero -->
+      <section class="hero">
+        <div class="boot-only mono boot-prompt" aria-hidden="true">$ ./graduation --init</div>
+        <pre class="boot-only mono ascii" aria-hidden="true">   ( (
+    ) )
+  ........
+  |      |]
+  \      /
+   `----'</pre>
+        <img class="hero-photo" id="hero-photo" alt="">
+        <p class="greeting" id="greeting"></p>
+        <h1 class="name" id="name"></h1>
+        <p class="role mono" id="role"></p>
+      </section>
+
+      <!-- 2. Event info -->
+      <section class="info" aria-label="Thông tin sự kiện">
+        <div class="info-row"><span class="icon" aria-hidden="true">📅</span><span class="key mono" aria-hidden="true">date =</span><span class="value" id="date"></span></div>
+        <div class="info-row"><span class="icon" aria-hidden="true">⏰</span><span class="key mono" aria-hidden="true">time =</span><span class="value" id="time"></span></div>
+        <div class="info-row"><span class="icon" aria-hidden="true">📍</span><span class="key mono" aria-hidden="true">venue =</span><span class="value" id="venue"></span><a id="map-link" class="map-link" target="_blank" rel="noopener" hidden>Chỉ đường</a></div>
+      </section>
+
+      <!-- 3. Story -->
+      <section class="story" id="story" hidden>
+        <p class="label mono" aria-hidden="true">&gt; cat story.md</p>
+        <h2>Hành trình của Dũng</h2>
+        <div id="story-body"></div>
+      </section>
+
+      <!-- 4. Photos -->
+      <section class="photos" id="photos" hidden>
+        <p class="label mono" aria-hidden="true">&gt; ls photos/</p>
+        <h2>Khoảnh khắc</h2>
+        <div class="photo-grid" id="photo-grid"></div>
+      </section>
+
+      <!-- 5. RSVP -->
+      <section class="rsvp" id="rsvp">
+        <p class="label mono" aria-hidden="true">&gt; rsvp.exe</p>
+        <h2>Xác nhận tham dự</h2>
+        <form id="rsvp-form" novalidate>
+          <label class="field-label" for="rsvp-name">Tên của bạn</label>
+          <input id="rsvp-name" name="name" type="text" maxlength="60" autocomplete="name" aria-describedby="err-name">
+          <p class="field-error" id="err-name" role="alert"></p>
+
+          <fieldset class="choice" aria-describedby="err-attending">
+            <legend class="field-label">Bạn sẽ đến chứ?</legend>
+            <label class="option"><input type="radio" name="attending" value="Có"><span>Có, mình sẽ đến</span></label>
+            <label class="option"><input type="radio" name="attending" value="Không"><span>Tiếc quá, mình không đến được</span></label>
+          </fieldset>
+          <p class="field-error" id="err-attending" role="alert"></p>
+
+          <label class="field-label" for="rsvp-message">Lời nhắn cho Dũng</label>
+          <textarea id="rsvp-message" name="message" rows="4" maxlength="500"></textarea>
+
+          <button type="submit" class="button-primary" id="rsvp-submit">Gửi ☕</button>
+          <p class="form-error" id="form-error" role="alert"></p>
+        </form>
+        <div class="thanks" id="thanks" hidden tabindex="-1">
+          <div class="thanks-icon" aria-hidden="true">☕</div>
+          <p class="thanks-title">Cảm ơn bạn!</p>
+          <p>Dũng đã nhận được lời nhắn.<br>Hẹn gặp bạn ngày <span id="thanks-date"></span>.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="lightbox" id="lightbox"><img id="lightbox-img" alt=""></dialog>
+</body>
+</html>

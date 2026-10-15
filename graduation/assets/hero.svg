@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <pattern id="p" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="20" height="20" fill="#071014"/><rect width="10" height="20" fill="#0b171c"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="500" fill="url(#p)"/>
+  <text x="200" y="245" fill="#5E8A96" font-family="system-ui, sans-serif" font-size="22" text-anchor="middle">[ Ảnh chính của Dũng ]</text>
+  <text x="200" y="275" fill="#5E8A96" font-family="system-ui, sans-serif" font-size="15" text-anchor="middle">thay file assets/hero.svg</text>
+</svg>
