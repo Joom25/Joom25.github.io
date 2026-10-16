@@ -21,14 +21,14 @@ export default {
   // Lời chào khi link không có nhóm hoặc nhóm không đúng
   neutralGreeting: 'Xin chào! Trân trọng mời bạn đến chung vui trong ngày Dũng nhận bằng Cử nhân Trí tuệ Nhân tạo.',
 
-  // skin: 'coffee' (Coffee.exe), 'boot' (Boot Sequence) hoặc 'moon' (Moonlight). slot: giờ đón, ví dụ '07:30'
+  // skin: 'coffee' (Coffee.exe), 'boot' (Boot Sequence), 'moon' (Moonlight) hoặc 'paper' (trắng be, dịu mắt). slot: giờ đón, ví dụ '07:30'
   // Không bắt buộc: heroPhoto (ảnh riêng, để '' thì dùng ảnh chính), heroAlt (mô tả ảnh riêng), title (chữ trên thanh tiêu đề),
   // submitLabel (chữ trên nút gửi RSVP). Bỏ trống thì dùng mặc định.
   groups: {
     family: {
       greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
       slot: '',
-      skin: 'coffee',
+      skin: 'paper',
     },
     friends: {
       greeting: 'Ê! Dũng tốt nghiệp rồi nè ☕ Ghé chung vui với mình lúc {giờ} nha. Thiếu bạn là thiếu một tấm ảnh đẹp đó!',

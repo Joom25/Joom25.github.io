@@ -204,3 +204,20 @@ textarea { resize: vertical; }
 [data-skin="moon"] .role { color: var(--accent); }
 [data-skin="moon"] .hero-photo { box-shadow: 0 0 32px 4px #C9B8FF26; }
 [data-skin="moon"] .button-primary { border-radius: 9999px; }
+
+/* Paper skin (family link): warm white + beige, soft brown text, low contrast on purpose. Light, so color-scheme flips. */
+[data-skin="paper"] {
+  --bg: #F8F3EA;
+  --surface: #EFE7D8;
+  --text: #4A3F34;
+  --muted: #706353;
+  --primary: #7F5F3A;
+  --accent: #7F5F3A;
+  --on-accent: #FFFDF8;
+  --hairline: #7F5F3A26;
+  --frame-border: #7F5F3A40;
+  --error: #A8402E;
+  color-scheme: light;
+}
+[data-skin="paper"] .role { color: var(--accent); }
+[data-skin="paper"] .lightbox::backdrop { background: #2A221AE6; }

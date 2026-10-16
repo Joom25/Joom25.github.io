@@ -18,7 +18,7 @@ export function resolveGroup(search, content) {
     group: group ? key : 'none',
     greeting,
     time: slot || TIME_UNSET,
-    skin: ['boot', 'moon'].includes(group?.skin) ? group.skin : 'coffee',
+    skin: ['boot', 'moon', 'paper'].includes(group?.skin) ? group.skin : 'coffee',
     heroPhoto: group?.heroPhoto || content.heroPhoto || '',
     heroAlt: group?.heroAlt || content.heroAlt || '',
     title: group?.title || DEFAULT_TITLE,
