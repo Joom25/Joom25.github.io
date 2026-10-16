@@ -28,6 +28,11 @@ export default {
     family: {
       greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
       slot: '',
+      skin: 'coffee',
+    },
+    test: {
+      greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
+      slot: '',
       skin: 'paper',
     },
     friends: {
