@@ -43,14 +43,19 @@ The header row (Thời gian, Nhóm, Tên, Tham dự, Lời nhắn) is written on
 
 | Nhóm / Group | Link |
 |---|---|
-| Gia đình / Family | `https://joom25.github.io/graduation/?g=family` |
+| Ông bà, bố mẹ, cô dì chú bác / Elders (Paper) | `https://joom25.github.io/graduation/?g=elders` |
+| Anh chị em / Siblings (Paper) | `https://joom25.github.io/graduation/?g=siblings` |
+| Gia đình (dự phòng) / Family (backup) | `https://joom25.github.io/graduation/?g=family` |
 | Bạn bè / Friends | `https://joom25.github.io/graduation/?g=friends` |
 | Bạn cùng lớp / Classmates | `https://joom25.github.io/graduation/?g=classmates` |
 | Đồng nghiệp / Coworkers | `https://joom25.github.io/graduation/?g=coworkers` |
 | Người yêu / Girlfriend (Moonlight) | `https://joom25.github.io/graduation/?g=21-06-2026_10.8039N_106.7133E` |
 
-Link của em không phân biệt chữ hoa/thường (`N`/`n`, `E`/`e` đều được). Trước khi gửi: trong `js/content.mjs` thay `{tên em}`, điền giờ đón `slot` của em, và thay ảnh `assets/hero-us.svg`. Nếu dùng ảnh thật `.jpg` (ví dụ `assets/hai-dua.jpg`) thì đổi `heroPhoto` trong nhóm của em sang đúng đường dẫn đó.
-Her key is case-insensitive. Before sending: in `js/content.mjs` replace `{tên em}`, set her `slot`, and replace the placeholder `assets/hero-us.svg`. If you use a real `.jpg` photo (e.g. `assets/hai-dua.jpg`), change her group's `heroPhoto` to that path.
+Link của em không phân biệt chữ hoa/thường (`N`/`n`, `E`/`e` đều được). Trước khi gửi: trong `js/content.mjs` thay `{nickname}`, điền giờ đón `slot` của em, và thay ảnh `assets/hero-us.svg`. Nếu dùng ảnh thật `.jpg` (ví dụ `assets/hai-dua.jpg`) thì đổi `heroPhoto` trong nhóm của em sang đúng đường dẫn đó.
+Her key is case-insensitive. Before sending: in `js/content.mjs` replace `{nickname}`, set her `slot`, and replace the placeholder `assets/hero-us.svg`. If you use a real `.jpg` photo (e.g. `assets/hai-dua.jpg`), change her group's `heroPhoto` to that path.
+
+Link riêng từng người: thêm người vào `people` trong `js/content.mjs` (xem ví dụ trong file), rồi gửi `https://joom25.github.io/graduation/?g=<key>`. Lời chào, giờ đón và skin lấy từ nhóm; `{name}` thành tên gọi của người đó. Đổi giờ của nhóm là mọi link riêng trong nhóm đổi theo.
+Personal links: add the person to `people` in `js/content.mjs` (see the example there) and send `https://joom25.github.io/graduation/?g=<key>`. Greeting, time and skin come from their group; `{name}` becomes their call name. Changing a group's time updates every personal link in it.
 
 Link không có `?g=` hoặc sai nhóm vẫn mở được, với lời chào chung và giờ làm lễ.
 A link without `?g=` or with an unknown group still works, with a neutral greeting and the ceremony time.

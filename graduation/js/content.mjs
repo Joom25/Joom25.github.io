@@ -1,6 +1,7 @@
 // Nội dung thiệp mời. Dũng chỉ cần sửa file này; link đã gửi vẫn giữ nguyên.
 // Để trống ('') hoặc [] thì trang tự hiện chữ "cập nhật sau" hoặc ẩn mục đó.
-// Trong lời chào, {giờ} sẽ được thay bằng giờ đón của nhóm.
+// Trong lời chào, {time} sẽ được thay bằng giờ đón, {name} bằng tên gọi của khách (link riêng).
+// Link nhóm không có tên thì {name} thành "bạn".
 
 export default {
   name: 'Huỳnh Anh Dũng',
@@ -26,12 +27,30 @@ export default {
   // submitLabel (chữ trên nút gửi RSVP), yesLabel / noLabel (chữ hai lựa chọn Có / Không). Bỏ trống thì dùng mặc định.
   groups: {
     family: {
-      greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
+      greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {time}.',
       slot: '',
       skin: 'coffee',
     },
     test: {
-      greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {giờ}.',
+      greeting: 'Kính mời ông bà, bố mẹ, cô dì chú bác và anh chị em đến chung vui trong ngày con/em nhận bằng Cử nhân Trí tuệ Nhân tạo. Hành trình này có được là nhờ cả nhà. Con/em mong được gặp mọi người lúc {time}.',
+      slot: '',
+      skin: 'paper',
+      submitLabel: 'Gửi cho Bo',
+      yesLabel: 'Có, sẽ đến nhé',
+      noLabel: 'Tiếc quá, không đến được rồi, gửi bo lời chúc ở đây nha',
+    },
+    // Ông bà, bố mẹ, cô dì chú bác. Không bắt đầu câu bằng {name} (tên gọi viết thường, ví dụ "bác Hai").
+    elders: {
+      greeting: 'Thưa {name}, ngày 08.11 này con nhận bằng Cử nhân Trí tuệ Nhân tạo. Con kính mời {name} đến chung vui cùng con lúc {time}. Có được ngày hôm nay là nhờ {name} luôn thương và lo cho con.',
+      slot: '',
+      skin: 'paper',
+      submitLabel: 'Gửi cho Bo',
+      yesLabel: 'Có, sẽ đến nhé',
+      noLabel: 'Tiếc quá, không đến được rồi, gửi bo lời chúc ở đây nha',
+    },
+    // Anh chị em: Dũng xưng "Bo" nên dùng chung cho anh chị và em.
+    siblings: {
+      greeting: 'Tốt nghiệp rồi nè, {name} ơi! 🎓 Ngày 08.11 Bo nhận bằng Cử nhân Trí tuệ Nhân tạo. Đến chung vui với Bo lúc {time} nha, thiếu {name} là thiếu một tấm ảnh gia đình đó.',
       slot: '',
       skin: 'paper',
       submitLabel: 'Gửi cho Bo',
@@ -39,24 +58,24 @@ export default {
       noLabel: 'Tiếc quá, không đến được rồi, gửi bo lời chúc ở đây nha',
     },
     friends: {
-      greeting: 'Ê! Dũng tốt nghiệp rồi nè ☕ Ghé chung vui với mình lúc {giờ} nha. Thiếu bạn là thiếu một tấm ảnh đẹp đó!',
+      greeting: 'Ê! Dũng tốt nghiệp rồi nè ☕ Ghé chung vui với mình lúc {time} nha. Thiếu bạn là thiếu một tấm ảnh đẹp đó!',
       slot: '',
       skin: 'coffee',
     },
     classmates: {
-      greeting: 'Bao nhiêu deadline, bao nhiêu đêm chạy model, cuối cùng tụi mình cũng tới đích! Hẹn gặp cả lớp lúc {giờ}, để chụp chung một tấm ảnh tốt nghiệp thật xịn.',
+      greeting: 'Bao nhiêu deadline, bao nhiêu đêm chạy model, cuối cùng tụi mình cũng tới đích! Hẹn gặp cả lớp lúc {time}, để chụp chung một tấm ảnh tốt nghiệp thật xịn.',
       slot: '',
       skin: 'coffee',
     },
     coworkers: {
-      greeting: 'Trân trọng kính mời anh/chị đến dự lễ tốt nghiệp Cử nhân Trí tuệ Nhân tạo của Dũng. Rất mong được gặp anh/chị lúc {giờ}.',
+      greeting: 'Trân trọng kính mời anh/chị đến dự lễ tốt nghiệp Cử nhân Trí tuệ Nhân tạo của Dũng. Rất mong được gặp anh/chị lúc {time}.',
       slot: '',
       skin: 'boot',
     },
     // Link riêng cho em: ?g=21-06-2026_10.8039N_106.7133E (không phân biệt hoa thường).
-    // Nhớ thay {tên em} bằng tên gọi của em.
+    // Nhớ thay {nickname} bằng tên gọi của em.
     '21-06-2026_10.8039n_106.7133e': {
-      greeting: '{tên em} ơi, ngày anh tốt nghiệp, người anh muốn thấy đầu tiên dưới khán đài là em. Em đến sớm một chút lúc {giờ} nhé, anh muốn có tấm ảnh đầu tiên với em.',
+      greeting: '{nickname} ơi, ngày anh tốt nghiệp, người anh muốn thấy đầu tiên dưới khán đài là em. Em đến sớm một chút lúc {time} nhé, anh muốn có tấm ảnh đầu tiên với em.',
       slot: '',
       skin: 'moon',
       heroPhoto: 'assets/hero-us.svg',
@@ -65,6 +84,12 @@ export default {
       submitLabel: 'Em sẽ đến 💜',
     },
   },
+
+  // Link riêng từng người: ?g=<key>. Key = tên không dấu + 4 ký tự ngẫu nhiên, tối đa 20 ký tự.
+  // group: nhóm của người đó (lấy lời chào, giờ đón, skin từ nhóm). name: tên gọi, thay cho {name}.
+  // heroPhoto / heroAlt: ảnh của Dũng với người đó. Bỏ trống thì dùng ảnh của nhóm hoặc ảnh chính.
+  // Ví dụ: 'minh-k7q2': { group: 'friends', name: 'Minh', heroPhoto: 'assets/p/minh.jpg', heroAlt: 'Dũng và Minh ở Đà Lạt, 2019' },
+  people: {},
 
   // Câu chuyện: mỗi phần tử là một đoạn văn. Để [] thì ẩn mục này.
   story: [],

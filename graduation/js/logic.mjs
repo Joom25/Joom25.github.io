@@ -5,24 +5,37 @@ export const DEFAULT_TITLE = 'dung@aicf:~/graduation';
 export const DEFAULT_SUBMIT = 'Gửi ☕';
 export const DEFAULT_YES = 'Có, mình sẽ đến';
 export const DEFAULT_NO = 'Tiếc quá, mình không đến được';
+// Fills {name} when a group link (not a personal one) is opened.
+export const NAME_UNSET = 'bạn';
 
-// Returns what the link decides: group key, greeting (with {giờ} filled), time text, skin,
-// and the optional per-group hero photo and alt text, title-bar text, submit label and yes/no answer labels (with defaults).
+const own = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+
+// Returns what the link decides: link key, greeting (with {name} and {time} filled), time text, skin,
+// and the optional hero photo and alt text, title-bar text, submit label and yes/no answer labels (with defaults).
+// A personal link (content.people) takes everything from its group except its name and photo.
 export function resolveGroup(search, content) {
   const key = (new URLSearchParams(search).get('g') || '').trim().toLowerCase();
   const groups = content.groups ?? {};
-  const group = Object.prototype.hasOwnProperty.call(groups, key) ? groups[key] : null;
+  const people = content.people ?? {};
+  // A person whose group is missing falls through to the neutral page, like an unknown key.
+  const person = own(people, key) && own(groups, String(people[key]?.group)) ? people[key] : null;
+  const group = person ? groups[person.group] : own(groups, key) ? groups[key] : null;
   const slot = String((group ? group.slot : content.ceremonyTime) ?? '').trim();
+  const name = String(person?.name ?? '').trim() || NAME_UNSET;
   const template = String((group ? group.greeting : content.neutralGreeting) ?? '');
-  // Without a time, drop "lúc {giờ}" instead of leaving a blank in the sentence.
-  const greeting = slot ? template.replace(/\{giờ\}/g, () => slot) : template.replace(/\s*lúc \{giờ\}|\{giờ\}/g, '');
+  // Without a time, drop "lúc {time}" instead of leaving a blank in the sentence.
+  const filled = slot ? template : template.replace(/\s*lúc \{time\}|\{time\}/g, '');
+  // One pass with a callback: values go in literally and are never re-expanded.
+  const greeting = filled.replace(/\{(name|time)\}/g, (_, k) => (k === 'name' ? name : slot));
+  // Photo and alt travel together: the first of person, group, site that has a photo.
+  const photo = [person, group, content].find((o) => o?.heroPhoto);
   return {
     group: group ? key : 'none',
     greeting,
     time: slot || TIME_UNSET,
     skin: ['boot', 'moon', 'paper'].includes(group?.skin) ? group.skin : 'coffee',
-    heroPhoto: group?.heroPhoto || content.heroPhoto || '',
-    heroAlt: group?.heroAlt || content.heroAlt || '',
+    heroPhoto: photo?.heroPhoto || '',
+    heroAlt: photo?.heroAlt || content.heroAlt || '',
     title: group?.title || DEFAULT_TITLE,
     submitLabel: group?.submitLabel || DEFAULT_SUBMIT,
     yesLabel: group?.yesLabel || DEFAULT_YES,
