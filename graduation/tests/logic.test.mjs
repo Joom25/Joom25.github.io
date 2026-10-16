@@ -14,7 +14,7 @@ const content = {
     coworkers: { greeting: 'Gặp anh/chị lúc {giờ}.', slot: '09:00', skin: 'boot' },
     friends: { greeting: 'Ghé lúc {giờ} nha.', slot: '', skin: 'coffee' },
     [HER]: {
-      greeting: '{tên em} ơi, đến lúc {giờ} nhé.', slot: '06:45', skin: 'moon',
+      greeting: '{tên em} ơi, đến lúc {giờ} nhé.', slot: '06:45', skin: 'cotton',
       heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜',
     },
   },
@@ -57,7 +57,7 @@ test('real content.mjs resolves every group without a leftover {giờ}', () => {
   }
   assert.equal(resolveGroup('?g=coworkers', realContent).skin, 'boot');
   const her = resolveGroup('?g=21-06-2026_10.8039N_106.7133E', realContent);
-  assert.equal(her.skin, 'moon');
+  assert.equal(her.skin, 'cotton');
   assert.ok(!her.greeting.includes('{giờ}'));
   assert.equal(her.title, 'dung@aicf:~/for-you');
   assert.equal(her.submitLabel, 'Em sẽ đến 💜');
@@ -65,10 +65,10 @@ test('real content.mjs resolves every group without a leftover {giờ}', () => {
   assert.equal(her.heroAlt, 'Ảnh Dũng và em');
 });
 
-test('her link: Moonlight, her greeting, slot, photo, title and button, any letter case', () => {
+test('her link: Cotton Candy Sky, her greeting, slot, photo, title and button, any letter case', () => {
   for (const search of ['?g=21-06-2026_10.8039N_106.7133E', '?g=21-06-2026_10.8039n_106.7133e']) {
     assert.deepEqual(resolveGroup(search, content), {
-      group: HER, greeting: '{tên em} ơi, đến lúc 06:45 nhé.', time: '06:45', skin: 'moon',
+      group: HER, greeting: '{tên em} ơi, đến lúc 06:45 nhé.', time: '06:45', skin: 'cotton',
       heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜', ...answers,
     }, search);
   }
@@ -98,6 +98,7 @@ test('her photo unset: falls back to the default hero photo', () => {
 
 test('unknown skin value falls back to coffee', () => {
   assert.equal(resolveGroup('?g=x', { groups: { x: { skin: 'neon' } } }).skin, 'coffee');
+  assert.equal(resolveGroup('?g=x', { groups: { x: { skin: 'moon' } } }).skin, 'coffee'); // retired by Cotton Candy Sky
 });
 
 test('RSVP invalid: blank name and no choice give Vietnamese errors', () => {

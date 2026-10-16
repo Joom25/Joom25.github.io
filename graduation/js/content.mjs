@@ -21,8 +21,9 @@ export default {
   // Lời chào khi link không có nhóm hoặc nhóm không đúng
   neutralGreeting: 'Xin chào! Trân trọng mời bạn đến chung vui trong ngày Dũng nhận bằng Cử nhân Trí tuệ Nhân tạo.',
 
-  // skin: 'coffee' (Coffee.exe), 'boot' (Boot Sequence), 'moon' (Moonlight) hoặc 'paper' (trắng be, dịu mắt). slot: giờ đón, ví dụ '07:30'
+  // skin: 'coffee' (Coffee.exe), 'boot' (Boot Sequence), 'cotton' (Cotton Candy Sky) hoặc 'paper' (trắng be, dịu mắt). slot: giờ đón, ví dụ '07:30'
   // Không bắt buộc: heroPhoto (ảnh riêng, để '' thì dùng ảnh chính), heroAlt (mô tả ảnh riêng), title (chữ trên thanh tiêu đề),
+  // (title không hiện trên skin 'cotton' và 'paper' vì hai skin này không có thanh tiêu đề.)
   // submitLabel (chữ trên nút gửi RSVP), yesLabel / noLabel (chữ hai lựa chọn Có / Không). Bỏ trống thì dùng mặc định.
   groups: {
     family: {
@@ -58,7 +59,7 @@ export default {
     '21-06-2026_10.8039n_106.7133e': {
       greeting: '{tên em} ơi, ngày anh tốt nghiệp, người anh muốn thấy đầu tiên dưới khán đài là em. Em đến sớm một chút lúc {giờ} nhé, anh muốn có tấm ảnh đầu tiên với em.',
       slot: '',
-      skin: 'moon',
+      skin: 'cotton',
       heroPhoto: 'assets/hero-us.svg',
       heroAlt: 'Ảnh Dũng và em',
       title: 'dung@aicf:~/for-you',
