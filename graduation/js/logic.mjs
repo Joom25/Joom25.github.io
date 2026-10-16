@@ -3,9 +3,11 @@
 export const TIME_UNSET = 'Giờ sẽ được cập nhật sớm';
 export const DEFAULT_TITLE = 'dung@aicf:~/graduation';
 export const DEFAULT_SUBMIT = 'Gửi ☕';
+export const DEFAULT_YES = 'Có, mình sẽ đến';
+export const DEFAULT_NO = 'Tiếc quá, mình không đến được';
 
 // Returns what the link decides: group key, greeting (with {giờ} filled), time text, skin,
-// and the optional per-group hero photo and alt text, title-bar text and submit label (with defaults).
+// and the optional per-group hero photo and alt text, title-bar text, submit label and yes/no answer labels (with defaults).
 export function resolveGroup(search, content) {
   const key = (new URLSearchParams(search).get('g') || '').trim().toLowerCase();
   const groups = content.groups ?? {};
@@ -23,6 +25,8 @@ export function resolveGroup(search, content) {
     heroAlt: group?.heroAlt || content.heroAlt || '',
     title: group?.title || DEFAULT_TITLE,
     submitLabel: group?.submitLabel || DEFAULT_SUBMIT,
+    yesLabel: group?.yesLabel || DEFAULT_YES,
+    noLabel: group?.noLabel || DEFAULT_NO,
   };
 }
 

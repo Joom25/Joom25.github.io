@@ -219,5 +219,6 @@ textarea { resize: vertical; }
   --error: #A8402E;
   color-scheme: light;
 }
+[data-skin="paper"] .title-bar { display: none; } /* plain paper card for older relatives, no terminal chrome */
 [data-skin="paper"] .role { color: var(--accent); }
 [data-skin="paper"] .lightbox::backdrop { background: #2A221AE6; }

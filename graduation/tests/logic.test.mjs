@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET, DEFAULT_TITLE, DEFAULT_SUBMIT } from '../js/logic.mjs';
+import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET, DEFAULT_TITLE, DEFAULT_SUBMIT, DEFAULT_YES, DEFAULT_NO } from '../js/logic.mjs';
 import realContent from '../js/content.mjs';
 
 const HER = '21-06-2026_10.8039n_106.7133e';
@@ -20,10 +20,11 @@ const content = {
   },
 };
 const defaults = { heroPhoto: 'assets/hero.svg', heroAlt: 'Ảnh Dũng', title: DEFAULT_TITLE, submitLabel: DEFAULT_SUBMIT };
+const answers = { yesLabel: DEFAULT_YES, noLabel: DEFAULT_NO };
 
 test('group link: coworkers gets Boot Sequence, own greeting and slot', () => {
   assert.deepEqual(resolveGroup('?g=coworkers', content), {
-    group: 'coworkers', greeting: 'Gặp anh/chị lúc 09:00.', time: '09:00', skin: 'boot', ...defaults,
+    group: 'coworkers', greeting: 'Gặp anh/chị lúc 09:00.', time: '09:00', skin: 'boot', ...defaults, ...answers,
   });
 });
 
@@ -36,7 +37,7 @@ test('group link: family gets Coffee.exe', () => {
 test('unknown or missing group: Coffee.exe, neutral greeting, ceremony time', () => {
   for (const search of ['?g=xyz', '', '?g=', '?g=toString', '?g=__proto__', '?g=21-06-2026']) {
     assert.deepEqual(resolveGroup(search, content), {
-      group: 'none', greeting: 'Xin chào!', time: '08:00', skin: 'coffee', ...defaults,
+      group: 'none', greeting: 'Xin chào!', time: '08:00', skin: 'coffee', ...defaults, ...answers,
     }, search);
   }
 });
@@ -68,7 +69,7 @@ test('her link: Moonlight, her greeting, slot, photo, title and button, any lett
   for (const search of ['?g=21-06-2026_10.8039N_106.7133E', '?g=21-06-2026_10.8039n_106.7133e']) {
     assert.deepEqual(resolveGroup(search, content), {
       group: HER, greeting: '{tên em} ơi, đến lúc 06:45 nhé.', time: '06:45', skin: 'moon',
-      heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜',
+      heroPhoto: 'assets/hero-us.svg', heroAlt: 'Ảnh Dũng và em', title: 'dung@aicf:~/for-you', submitLabel: 'Em sẽ đến 💜', ...answers,
     }, search);
   }
 });
@@ -78,6 +79,16 @@ test('other groups keep default photo, title bar and "Gửi ☕"', () => {
     const { heroPhoto, heroAlt, title, submitLabel } = resolveGroup(`?g=${g}`, content);
     assert.deepEqual({ heroPhoto, heroAlt, title, submitLabel }, defaults, g);
   }
+});
+
+test('test link: Paper, family greeting, Bo button and answer labels', () => {
+  const g = resolveGroup('?g=test', realContent);
+  assert.equal(g.skin, 'paper');
+  assert.equal(g.greeting, resolveGroup('?g=family', realContent).greeting);
+  assert.equal(g.submitLabel, 'Gửi cho Bo');
+  assert.equal(g.yesLabel, 'Có, sẽ đến nhé');
+  assert.equal(g.noLabel, 'Tiếc quá, không đến được rồi, gửi bo lời chúc ở đây nha');
+  assert.equal(resolveGroup('?g=family', realContent).yesLabel, 'Có, mình sẽ đến');
 });
 
 test('her photo unset: falls back to the default hero photo', () => {
@@ -134,8 +145,8 @@ test('RSVP failure: missing URL, network, HTTP and script errors all throw', asy
 test('content missing fields: no throw, empty slot still shows placeholder (no ceremonyTime fallback)', () => {
   const stripped = { ceremonyTime: '08:00', groups: { family: { skin: 'coffee' } } };
   const bare = { heroPhoto: '', heroAlt: '', title: DEFAULT_TITLE, submitLabel: DEFAULT_SUBMIT };
-  assert.deepEqual(resolveGroup('?g=family', stripped), { group: 'family', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare });
-  assert.deepEqual(resolveGroup('?g=x', {}), { group: 'none', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare });
+  assert.deepEqual(resolveGroup('?g=family', stripped), { group: 'family', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare, ...answers });
+  assert.deepEqual(resolveGroup('?g=x', {}), { group: 'none', greeting: '', time: TIME_UNSET, skin: 'coffee', ...bare, ...answers });
   assert.deepEqual(visibleSections({}), { story: false, photos: false });
 });
 

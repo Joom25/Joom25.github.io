@@ -7,6 +7,8 @@ const group = resolveGroup(location.search, content);
 document.documentElement.dataset.skin = group.skin;
 $('title-text').textContent = group.title;
 $('rsvp-submit').textContent = group.submitLabel;
+$('yes-label').textContent = group.yesLabel;
+$('no-label').textContent = group.noLabel;
 
 // 1. Hero
 if (group.heroPhoto) {
