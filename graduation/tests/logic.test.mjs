@@ -1,8 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET, DEFAULT_TITLE, DEFAULT_SUBMIT, DEFAULT_YES, DEFAULT_NO, NAME_UNSET } from '../js/logic.mjs';
-import realContent from '../js/content.mjs';
+import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp, TIME_UNSET, VENUE_UNSET, DEFAULT_TITLE, DEFAULT_SUBMIT, DEFAULT_YES, DEFAULT_NO, NAME_UNSET, SKINS, withGuests } from '../js/logic.mjs';
+import siteContent from '../js/content.mjs';
+import guests from '../js/people.mjs';
+
+const realContent = withGuests(siteContent, guests);
 
 const HER = '21-06-2026_10.8039n_106.7133e';
 const content = {
@@ -276,4 +279,68 @@ test('US-3 personal keys: name-xxxx format, at most 20 chars, never a group key'
     assert.ok(!Object.hasOwn(realContent.groups, k), `collides with group: ${k}`);
     assert.ok(Object.hasOwn(realContent.groups, people[k].group), `unknown group for ${k}`);
   }
+});
+
+// US-4: personal overrides (option C)
+const sc = {
+  groups: { siblings: { greeting: 'Nhóm {name} lúc {time}.', slot: '08:00', skin: 'paper', title: 't', ...BO } },
+  people: { 'chi-hai-q9w2': { group: 'siblings', name: 'chị Hai', greeting: 'Chị Hai ơi, đến sớm lúc {time} nha.' } },
+};
+const withField = (f, v) => ({ ...sc, people: { 'chi-hai-q9w2': { ...sc.people['chi-hai-q9w2'], [f]: v } } });
+
+test('US-4 own greeting replaces the group\'s', () => {
+  assert.equal(resolveGroup('?g=chi-hai-q9w2', sc).greeting, 'Chị Hai ơi, đến sớm lúc 08:00 nha.');
+});
+
+test('US-4 any field the person sets wins, the rest come from the group', () => {
+  const base = resolveGroup('?g=chi-hai-q9w2', sc);
+  for (const [f, v] of [['slot', '07:45'], ['skin', 'cotton'], ['skin', 'boot'], ['title', 'dung@aicf:~/for-chi'],
+    ['submitLabel', 'Chị sẽ đến'], ['yesLabel', 'Chị đến nha'], ['noLabel', 'Chị bận rồi']]) {
+    const r = resolveGroup('?g=chi-hai-q9w2', withField(f, v));
+    const expected = f === 'slot' ? { ...base, time: v, greeting: 'Chị Hai ơi, đến sớm lúc 07:45 nha.' } : { ...base, [f]: v };
+    assert.deepEqual(r, expected, f);
+  }
+});
+
+test('US-4 blank person field falls back to the group, blank group field to the site default', () => {
+  const r = resolveGroup('?g=chi-hai-q9w2', withField('submitLabel', '  '));
+  assert.equal(r.submitLabel, 'Gửi cho Bo');
+  assert.equal(resolveGroup('?g=chi-hai-q9w2', withField('slot', '')).time, '08:00');
+  const bare = { groups: { siblings: { greeting: 'x', skin: '' } }, people: { 'a-0000': { group: 'siblings', name: 'A', title: '' } } };
+  const b = resolveGroup('?g=a-0000', bare);
+  assert.deepEqual([b.title, b.skin, b.submitLabel], [DEFAULT_TITLE, 'coffee', DEFAULT_SUBMIT]);
+});
+
+test('US-4 unknown person skin (moon) falls back to coffee', () => {
+  assert.equal(resolveGroup('?g=chi-hai-q9w2', withField('skin', 'moon')).skin, 'coffee');
+});
+
+test('US-4 overrides never leak onto the plain group link', () => {
+  assert.equal(resolveGroup('?g=siblings', withField('skin', 'boot')).skin, 'paper');
+});
+
+test('SKINS lists the non-default skins', () => {
+  assert.deepEqual(SKINS, ['boot', 'cotton', 'paper']);
+});
+
+test('withGuests: generated groups merge field-wise, people replaced, input untouched', () => {
+  const c = { name: 'D', groups: { elders: { greeting: 'old', skin: 'paper', ...BO }, family: { greeting: 'f' } }, people: { old: {} } };
+  const copy = structuredClone(c);
+  const out = withGuests(c, { groups: { elders: { greeting: 'new', slot: '07:30', submitLabel: '' }, extra: { greeting: 'e' } }, people: { 'a-0000': { group: 'elders', name: 'A' } } });
+  assert.deepEqual(out.groups.elders, { greeting: 'new', slot: '07:30', skin: 'paper', ...BO, submitLabel: '' });
+  assert.equal(resolveGroup('?g=elders', out).submitLabel, DEFAULT_SUBMIT);
+  assert.equal(resolveGroup('?g=elders', out).yesLabel, BO.yesLabel);
+  assert.deepEqual(out.groups.family, { greeting: 'f' });
+  assert.deepEqual(out.groups.extra, { greeting: 'e' });
+  assert.deepEqual(out.people, { 'a-0000': { group: 'elders', name: 'A' } });
+  assert.equal(out.name, 'D');
+  assert.deepEqual(c, copy);
+  assert.deepEqual(withGuests(c, {}).groups, c.groups);
+  assert.deepEqual(withGuests(c, {}).people, {});
+});
+
+test('US-6 after removal: an old personal link opens the neutral page', () => {
+  const after = withGuests(realContent, { groups: {}, people: {} });
+  assert.equal(resolveGroup('?g=minh-k7q2', after).group, 'none');
+  assert.equal(resolveGroup('?g=friends', after).group, 'friends');
 });

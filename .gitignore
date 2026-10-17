@@ -1,0 +1,3 @@
+# Private guest data never belongs in the published site (see SETUP.md).
+*.csv
+photos/

@@ -85,12 +85,7 @@ export default {
       submitLabel: 'Em sẽ đến 💜',
     },
   },
-
-  // Link riêng từng người: ?g=<key>. Key = tên không dấu + 4 ký tự ngẫu nhiên, tối đa 20 ký tự.
-  // group: nhóm của người đó (lấy lời chào, giờ đón, skin từ nhóm). name: tên gọi, thay cho {name}.
-  // heroPhoto / heroAlt: ảnh của Dũng với người đó. Bỏ trống thì dùng ảnh của nhóm hoặc ảnh chính.
-  // Ví dụ: 'minh-k7q2': { group: 'friends', name: 'Minh', heroPhoto: 'assets/p/minh.jpg', heroAlt: 'Dũng và Minh ở Đà Lạt, 2019' },
-  people: {},
+  // Link riêng từng người nằm trong js/people.mjs, tạo từ guests.csv (xem SETUP.md). Nhóm trong groups.csv ghi đè nhóm cùng tên ở đây.
 
   // Câu chuyện: mỗi phần tử là một đoạn văn. Để [] thì ẩn mục này.
   story: [],

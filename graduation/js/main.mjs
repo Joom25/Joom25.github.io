@@ -1,9 +1,10 @@
 import content from './content.mjs';
-import { resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp } from './logic.mjs';
+import guests from './people.mjs';
+import { withGuests, resolveGroup, buildRsvp, validateRsvp, venueInfo, visibleSections, sendRsvp } from './logic.mjs';
 
 const $ = (id) => document.getElementById(id);
 
-const group = resolveGroup(location.search, content);
+const group = resolveGroup(location.search, withGuests(content, guests));
 document.documentElement.dataset.skin = group.skin;
 $('title-text').textContent = group.title;
 $('rsvp-submit').textContent = group.submitLabel;

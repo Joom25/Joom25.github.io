@@ -8,18 +8,33 @@ export const DEFAULT_NO = 'Tiếc quá, mình không đến được';
 // Fills {name} when a group link (not a personal one) is opened.
 export const NAME_UNSET = 'bạn';
 
+// Skins besides the default 'coffee'.
+export const SKINS = ['boot', 'cotton', 'paper'];
+// Fields a person may set for themselves (US-4); blank means "use the group's".
+const OVERRIDES = ['greeting', 'slot', 'skin', 'title', 'submitLabel', 'yesLabel', 'noLabel'];
+
 const own = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+
+// Site content plus the generated js/people.mjs: each generated group's fields go over the same group
+// in content.mjs (so fields the CSV has no column for survive), and people come only from the generated file.
+export function withGuests(content, guests) {
+  const groups = { ...content.groups };
+  for (const [k, g] of Object.entries(guests?.groups ?? {})) groups[k] = { ...(own(groups, k) ? groups[k] : {}), ...g };
+  return { ...content, groups, people: guests?.people ?? {} };
+}
 
 // Returns what the link decides: link key, greeting (with {name} and {time} filled), time text, skin,
 // and the optional hero photo and alt text, title-bar text, submit label and yes/no answer labels (with defaults).
-// A personal link (content.people) takes everything from its group except its name and photo.
+// A personal link (content.people) takes each field from the person if set, else from its group.
 export function resolveGroup(search, content) {
   const key = (new URLSearchParams(search).get('g') || '').trim().toLowerCase();
   const groups = content.groups ?? {};
   const people = content.people ?? {};
   // A person whose group is missing falls through to the neutral page, like an unknown key.
   const person = own(people, key) && own(groups, String(people[key]?.group)) ? people[key] : null;
-  const group = person ? groups[person.group] : own(groups, key) ? groups[key] : null;
+  const base = person ? groups[person.group] : own(groups, key) ? groups[key] : null;
+  const set = (f) => String(person?.[f] ?? '').trim() !== '';
+  const group = base && Object.fromEntries(OVERRIDES.map((f) => [f, set(f) ? person[f] : base[f]]));
   const slot = String((group ? group.slot : content.ceremonyTime) ?? '').trim();
   const name = String(person?.name ?? '').trim() || NAME_UNSET;
   const template = String((group ? group.greeting : content.neutralGreeting) ?? '');
@@ -28,12 +43,12 @@ export function resolveGroup(search, content) {
   // One pass with a callback: values go in literally and are never re-expanded.
   const greeting = filled.replace(/\{(name|time)\}/g, (_, k) => (k === 'name' ? name : slot));
   // Photo and alt travel together: the first of person, group, site that has a photo.
-  const photo = [person, group, content].find((o) => o?.heroPhoto);
+  const photo = [person, base, content].find((o) => o?.heroPhoto);
   return {
     group: group ? key : 'none',
     greeting,
     time: slot || TIME_UNSET,
-    skin: ['boot', 'cotton', 'paper'].includes(group?.skin) ? group.skin : 'coffee',
+    skin: SKINS.includes(group?.skin) ? group.skin : 'coffee',
     heroPhoto: photo?.heroPhoto || '',
     heroAlt: photo?.heroAlt || content.heroAlt || '',
     title: group?.title || DEFAULT_TITLE,
