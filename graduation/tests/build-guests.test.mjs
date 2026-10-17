@@ -120,6 +120,9 @@ test('build: every bad row stops the build, names the row, writes nothing', asyn
     'photo needs photo_alt': MINH.replace('"Dũng và Minh, 2019"', ''),
     'unsafe photo file name': MINH.replace('minh.jpg', '../minh.jpg'),
     'duplicate key': MINH.replace(/\r\n$/, ',minh-abcd\r\n').repeat(2),
+    'slot must be HH:MM': MINH.replace(',yes,,', ',yes,7h30,'),
+    'photo is empty': MINH.replace('minh.jpg', ''),
+    'photo must be .jpg': MINH.replace('minh.jpg', 'minh.heic'),
   };
   for (const [problem, guests] of Object.entries(cases)) {
     const { dataDir, siteDir } = setup(guests, { photos: { 'minh.jpg': 10 } });
@@ -133,6 +136,50 @@ test('build: every bad row stops the build, names the row, writes nothing', asyn
     assert.equal(readFileSync(join(dataDir, 'guests.csv'), 'utf8'), before, problem);
     assert.ok(!existsSync(join(dataDir, 'links.csv')) && !existsSync(join(siteDir, 'assets', 'p')), problem);
   }
+});
+
+test('build: bad slot in groups.csv stops the build; 24:00 is not a time', async () => {
+  for (const slot of ['7h30', '24:00', '7:30']) {
+    const { dataDir, siteDir } = setup(MINH, { groups: GROUPS.replace(',09:00,', `,${slot},`), photos: { 'minh.jpg': 10 } });
+    await assert.rejects(build({ dataDir, siteDir }), /groups\.csv .*row 2: .*slot must be HH:MM/, slot);
+  }
+});
+
+test('build: missing required columns stop the build', async () => {
+  const { dataDir, siteDir } = setup(MINH, { photos: { 'minh.jpg': 10 } });
+  writeFileSync(join(dataDir, 'guests.csv'), HEAD.replace('photo_ok', 'photook') + MINH);
+  await assert.rejects(build({ dataDir, siteDir }), /guests\.csv: .*missing columns: photo_ok/);
+  writeFileSync(join(dataDir, 'groups.csv'), 'group,slot\r\nfriends,09:00\r\n');
+  await assert.rejects(build({ dataDir, siteDir }), /groups\.csv: .*missing columns: greeting/);
+});
+
+test('build: a CSV not saved as UTF-8 stops the build', async () => {
+  const { dataDir, siteDir } = setup(MINH, { photos: { 'minh.jpg': 10 } });
+  writeFileSync(join(dataDir, 'guests.csv'), Buffer.concat([Buffer.from(HEAD), Buffer.from([0x4e, 0x67, 0x75, 0x79, 0xe3, 0x6e]), Buffer.from(',Minh,friends,B,,,no\r\n')]));
+  await assert.rejects(build({ dataDir, siteDir }), /guests\.csv: .*CSV UTF-8/);
+  assert.ok(!existsSync(join(dataDir, 'links.csv')));
+});
+
+test('parseCsv: an unterminated quote throws instead of swallowing rows', () => {
+  assert.throws(() => parseCsv('a,b\r\n"x,y\r\nc,d\r\n'), /unterminated quote/);
+});
+
+test('build: option B ignores its greeting cell and uses the group greeting', async () => {
+  const { dataDir, siteDir } = setup(MINH.replace(',yes,,,', ',yes,,Riêng cho Minh,'), { photos: { 'minh.jpg': 10 } });
+  await build({ dataDir, siteDir, random: seq() });
+  const data = await load(siteDir);
+  assert.equal(data.people['minh-abcd'].greeting, undefined);
+  assert.equal(resolveGroup('?g=minh-abcd', withGuests({ groups: {} }, data)).greeting, 'Ê Minh! Ghé lúc 09:00 nha, nhé ☕');
+});
+
+test('build: key write-back keeps the original header text and every cell', async () => {
+  const { dataDir, siteDir } = setup('', { photos: { 'minh.jpg': 10 } });
+  writeFileSync(join(dataDir, 'guests.csv'), HEAD.replace('notes', ' Notes ').replace('\r\n', ',Extra\r\n') + MINH.replace('\r\n', ',x,spill\r\n'));
+  await build({ dataDir, siteDir, random: seq() });
+  const back = parseCsv(readFileSync(join(dataDir, 'guests.csv'), 'utf8'));
+  // The row has one cell more than the header: it is kept, and key goes after it.
+  assert.deepEqual(back[0].slice(12), [' Notes ', 'Extra', '', 'key']);
+  assert.deepEqual(back[1].slice(12), ['send via Zalo', 'x', 'spill', 'minh-abcd']);
 });
 
 test('build: unknown skin in groups.csv stops the build', async () => {

@@ -92,8 +92,10 @@ Sửa CSV bao nhiêu lần cũng được: chạy lại lệnh ở bước 2, ke
 node Joom25.github.io/graduation/tools/build-guests.mjs --remove
 ```
 Lệnh này làm rỗng danh sách người trong `js/people.mjs` và xoá `assets/p/`. Rồi commit và push. Link riêng đã gửi vẫn mở được nhưng thành trang chung, không tên, không ảnh riêng. Link nhóm vẫn như cũ. Lịch sử git vẫn còn nội dung cũ.
+**Sau khi gỡ, đừng chạy lại lệnh tạo link thường (không có `--remove`)**: `guests.csv` vẫn giữ các key, nên lệnh đó sẽ đưa mọi người lên lại.
 
 **EN** — From 2026-11-09, run the command above with `--remove`, then commit and push. It empties the people in `js/people.mjs` (groups stay) and deletes `assets/p/`. Old personal links open the neutral page; group links are unchanged. Git history still holds the old content.
+**After removal, do not run the normal build (without `--remove`) again**: `guests.csv` still holds the keys, so it would republish everyone.
 
 ## 7. Kiểm tra / Test
 

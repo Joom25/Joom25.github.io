@@ -14,6 +14,9 @@ const MAX_PHOTO = 300 * 1024;
 const KEY_RE = /^[a-z0-9]+(-[a-z0-9]+)*-[a-z0-9]{4}$/;
 const GROUP_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const PHOTO_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/; // a plain file name inside photos/, no folders
+const PHOTO_EXT = /\.(jpe?g|png|webp)$/i; // formats every phone browser shows
+const SLOT_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const slotOk = (s) => s === '' || SLOT_RE.test(s);
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const skinOk = (s) => s === '' || s === 'coffee' || SKINS.includes(s);
 // CSV column -> field name in people.mjs (shared by groups and people).
@@ -39,6 +42,7 @@ export function parseCsv(text) {
       row.push(cell); rows.push(row); row = []; cell = '';
     } else cell += c;
   }
+  if (quoted) throw new Error('CSV: thiếu dấu " đóng / unterminated quote');
   if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
   return rows;
 }
@@ -51,7 +55,7 @@ export function toCsv(rows) {
 
 // Accent-free lowercase call name + '-' + 4 random [a-z0-9], at most 20 chars, not in `taken`.
 export function makeKey(callAs, taken, random = randomInt) {
-  const slug = String(callAs).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[đĐ]/g, 'd')
+  const slug = String(callAs).normalize('NFD').replace(/\p{Mn}/gu, '').replace(/[đĐ]/g, 'd')
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 15).replace(/^-+|-+$/g, '') || 'khach';
   for (;;) {
     let tail = '';
@@ -68,7 +72,7 @@ function table(text) {
   const records = rest.map((cells, i) => ({ row: i + 2, cells }))
     .filter((r) => r.cells.some((c) => c.trim() !== ''))
     .map((r) => ({ ...r, get: (col) => String(r.cells[header.indexOf(col)] ?? '').trim() }));
-  return { header, records };
+  return { head, header, records };
 }
 
 async function load(file) {
@@ -92,10 +96,17 @@ export async function build({ dataDir = process.cwd(), siteDir, remove = false, 
     return { links: [], warnings: [] };
   }
 
+  const required = { 'groups.csv': ['group', 'greeting'], 'guests.csv': ['name', 'call_as', 'group', 'option', 'photo', 'photo_alt', 'photo_ok'] };
   const read = (name) => {
     const f = join(dataDir, name);
     if (!existsSync(f)) throw new Error(`Không thấy ${name} trong ${dataDir} / ${name} not found`);
-    return table(readFileSync(f, 'utf8'));
+    const text = readFileSync(f, 'utf8');
+    // U+FFFD = bytes that are not UTF-8, i.e. Excel's plain "CSV" (ANSI) format.
+    if (text.includes(String.fromCharCode(0xfffd))) throw new Error(`${name}: hãy lưu dạng "CSV UTF-8" / save as "CSV UTF-8" (Vietnamese text is garbled)`);
+    const t = table(text);
+    const missing = required[name].filter((c) => !t.header.includes(c));
+    if (missing.length) throw new Error(`${name}: thiếu cột / missing columns: ${missing.join(', ')}`);
+    return t;
   };
   const gt = read('groups.csv');
   const pt = read('guests.csv');
@@ -111,6 +122,7 @@ export async function build({ dataDir = process.cwd(), siteDir, remove = false, 
     if (Object.hasOwn(groups, key)) fail('groups.csv', r.row, `group "${key}" bị trùng / duplicate group`);
     if (!r.get('greeting')) fail('groups.csv', r.row, 'thiếu greeting / greeting is empty');
     if (!skinOk(r.get('skin'))) fail('groups.csv', r.row, `skin "${r.get('skin')}" không có / unknown skin`);
+    if (!slotOk(r.get('slot'))) fail('groups.csv', r.row, `slot "${r.get('slot')}" phải dạng HH:MM, ví dụ 07:30 / slot must be HH:MM`);
     // Only columns the file has: a missing yes_label column keeps content.mjs's value, a blank cell means site default.
     groups[key] = Object.fromEntries(Object.entries(FIELDS).filter(([col]) => gt.header.includes(col)).map(([col, f]) => [f, r.get(col)]));
   }
@@ -140,8 +152,11 @@ export async function build({ dataDir = process.cwd(), siteDir, remove = false, 
     if (option !== 'B' && option !== 'C') bad(`option "${r.get('option')}" phải là B hoặc C / option must be B or C`);
     if (option === 'C' && !r.get('greeting')) bad('option C cần greeting / option C needs a greeting');
     if (!skinOk(r.get('skin'))) bad(`skin "${r.get('skin')}" không có / unknown skin`);
+    if (!slotOk(r.get('slot'))) bad(`slot "${r.get('slot')}" phải dạng HH:MM, ví dụ 07:30 / slot must be HH:MM`);
     if (consent) {
-      if (!PHOTO_RE.test(photo)) bad(`tên ảnh "${photo}" không hợp lệ / unsafe photo file name`);
+      if (!photo) bad('thiếu tên ảnh / photo is empty');
+      else if (!PHOTO_RE.test(photo)) bad(`tên ảnh "${photo}" không hợp lệ / unsafe photo file name`);
+      else if (!PHOTO_EXT.test(photo)) bad(`ảnh "${photo}" phải là .jpg, .png hoặc .webp / photo must be .jpg, .jpeg, .png or .webp`);
       else if (!existsSync(join(dataDir, 'photos', photo))) bad(`không thấy photos/${photo} / photo file missing`);
       else {
         copies.push(photo);
@@ -163,24 +178,28 @@ export async function build({ dataDir = process.cwd(), siteDir, remove = false, 
 
   if (errors.length) throw new Error(`Chưa ghi gì cả / nothing written:\n${errors.join('\n')}`);
 
-  writePeople(siteDir, { groups, people });
+  // Order: keys saved first (Excel may lock guests.csv), people.mjs last so it never points at missing photos.
+  if (newKeys) {
+    // Original header text and every cell kept; only the key cell is set (a new key column goes after all cells).
+    const has = pt.header.includes('key');
+    const k = has ? pt.header.indexOf('key') : Math.max(pt.head.length, ...guests.map(({ r }) => r.cells.length));
+    const pad = (cells) => { const c = [...cells]; while (c.length < k) c.push(''); return c; };
+    const head = has ? pt.head : [...pad(pt.head), 'key'];
+    const rows = guests.map(({ r, key }) => { const c = pad(r.cells); c[k] = key; return c; });
+    writeFileSync(join(dataDir, 'guests.csv'), toCsv([head, ...rows]));
+  }
+  const links = guests.map(({ r, key }) => ({ name: r.get('name'), call_as: r.get('call_as'), link: `${SITE_URL}?g=${key}` }));
+  writeFileSync(join(dataDir, 'links.csv'), toCsv([['name', 'call_as', 'link'], ...links.map((l) => [l.name, l.call_as, l.link])]));
   // Wiped each build so a withdrawn consent also removes the file.
   rmSync(photoDir, { recursive: true, force: true });
   if (copies.length) mkdirSync(photoDir, { recursive: true });
   for (const photo of copies) copyFileSync(join(dataDir, 'photos', photo), join(photoDir, photo));
-
-  const links = guests.map(({ r, key }) => ({ name: r.get('name'), call_as: r.get('call_as'), link: `${SITE_URL}?g=${key}` }));
-  writeFileSync(join(dataDir, 'links.csv'), toCsv([['name', 'call_as', 'link'], ...links.map((l) => [l.name, l.call_as, l.link])]));
-  if (newKeys) {
-    const header = pt.header.includes('key') ? pt.header : [...pt.header, 'key'];
-    const k = header.indexOf('key');
-    const rows = guests.map(({ r, key }) => { const c = header.map((_, i) => r.cells[i] ?? ''); c[k] = key; return c; });
-    writeFileSync(join(dataDir, 'guests.csv'), toCsv([header, ...rows]));
-  }
+  writePeople(siteDir, { groups, people });
   return { links, warnings };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// Windows paths are case-insensitive, so `node Graduation/tools/...` must still run.
+if (process.argv[1] && resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase()) {
   const siteDir = dirname(dirname(fileURLToPath(import.meta.url)));
   const remove = process.argv.includes('--remove');
   try {
