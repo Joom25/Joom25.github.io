@@ -49,7 +49,7 @@ The header row (Thời gian, Nhóm, Tên, Tham dự, Lời nhắn) is written on
 | Bạn bè / Friends | `https://joom25.github.io/graduation/?g=friends` |
 | Bạn cùng lớp / Classmates | `https://joom25.github.io/graduation/?g=classmates` |
 | Đồng nghiệp / Coworkers | `https://joom25.github.io/graduation/?g=coworkers` |
-| Người yêu / Girlfriend (Moonlight) | `https://joom25.github.io/graduation/?g=21-06-2026_10.8039N_106.7133E` |
+| Người yêu / Girlfriend (Cotton Candy Sky) | `https://joom25.github.io/graduation/?g=21-06-2026_10.8039N_106.7133E` |
 
 Link của em không phân biệt chữ hoa/thường (`N`/`n`, `E`/`e` đều được). Trước khi gửi: trong `js/content.mjs` thay `{nickname}`, điền giờ đón `slot` của em, và thay ảnh `assets/hero-us.svg`. Nếu dùng ảnh thật `.jpg` (ví dụ `assets/hai-dua.jpg`) thì đổi `heroPhoto` trong nhóm của em sang đúng đường dẫn đó.
 Her key is case-insensitive. Before sending: in `js/content.mjs` replace `{nickname}`, set her `slot`, and replace the placeholder `assets/hero-us.svg`. If you use a real `.jpg` photo (e.g. `assets/hai-dua.jpg`), change her group's `heroPhoto` to that path.

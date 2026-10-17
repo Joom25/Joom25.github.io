@@ -1,4 +1,4 @@
-/* Tokens from DESIGN.md. Three skins: Coffee.exe (default), Boot Sequence ([data-skin="boot"]) and Moonlight ([data-skin="moon"]). */
+/* Tokens from DESIGN.md. Four skins: Coffee.exe (default), Boot Sequence ([data-skin="boot"]), Cotton Candy Sky ([data-skin="cotton"]) and Paper ([data-skin="paper"]). */
 :root {
   --bg: #000000;
   --surface: #071014;
@@ -188,22 +188,34 @@ textarea { resize: vertical; }
 [data-skin="boot"] .info-row .value::before,
 [data-skin="boot"] .info-row .value::after { content: '"'; color: var(--muted); font-family: var(--mono); font-weight: 400; }
 
-/* Moonlight skin (girlfriend link): Coffee.exe layout with the moon-* palette, no cyan. */
-[data-skin="moon"] {
-  --bg: #05070F;
-  --surface: #0D1222;
-  --text: #E3E9FF;
-  --muted: #7E8AB3;
-  --primary: #9DB4FF;
-  --accent: #C9B8FF;
-  --on-accent: #05070F;
-  --hairline: #9DB4FF22;
-  --frame-border: #9DB4FF33;
+/* Cotton Candy Sky skin (girlfriend link): #345995 -> #13254A dusk with pink clouds, no terminal chrome.
+   Pinks and #14BDEB never colour text; every text colour is >=4.5:1 on #345995, field edges >=3:1 on #13254A. */
+[data-skin="cotton"] {
+  --bg: #13254A;
+  --surface: #0A1530;
+  --text: #FFFFFF;
+  --muted: #C9D6EE;
+  --primary: #76E5FC;
+  --accent: #E899DC;
+  --on-accent: #13254A;
+  --hairline: #E899DC33;
+  --frame-border: #E899DC99;
+  --error: #FFD0C8;
 }
-[data-skin="moon"] .title-bar i { background: var(--accent); }
-[data-skin="moon"] .role { color: var(--accent); }
-[data-skin="moon"] .hero-photo { box-shadow: 0 0 32px 4px #C9B8FF26; }
-[data-skin="moon"] .button-primary { border-radius: 9999px; }
+[data-skin="cotton"] body {
+  min-height: 100vh; /* one gradient for the whole viewport, no repeat seam on short desktop pages */
+  background:
+    radial-gradient(160px 70px at 15% 90px, #E899DC40, transparent 70%),
+    radial-gradient(200px 80px at 85% 420px, #D387AB40, transparent 70%),
+    linear-gradient(180deg, #345995, #13254A) #13254A;
+}
+[data-skin="cotton"] .title-bar { display: none; }
+[data-skin="cotton"] .greeting { font-family: Georgia, "Times New Roman", serif; font-style: italic; }
+[data-skin="cotton"] .hero-photo { border: 2px solid var(--accent); border-radius: 120px 120px 14px 14px; }
+[data-skin="cotton"] .role { color: var(--primary); }
+[data-skin="cotton"] .info-row .icon { color: var(--accent); } /* icons only: 3.3:1 is fine for non-text */
+[data-skin="cotton"] .button-primary { border-radius: 9999px; box-shadow: 0 6px 20px #E899DC55; }
+[data-skin="cotton"] .lightbox::backdrop { background: #0A1530E6; }
 
 /* Paper skin (family link): warm white + beige, soft brown text, low contrast on purpose. Light, so color-scheme flips. */
 [data-skin="paper"] {
