@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thiệp mời tốt nghiệp · Huỳnh Anh Dũng</title>
+<meta name="description" content="Thiệp mời lễ tốt nghiệp Đại học FPT 2026">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #1F3BEA;   /* đổi màu chủ đạo ở đây: #C42F1A, #0B6B42, #6E28C2 */
+    --ink: #111111;
+    --paper: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  p, h1 { margin: 0; }
+
+  main { padding: 24px 20px 40px; }
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+  }
+  .label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero { display: flex; flex-direction: column; gap: 20px; }
+  .hero-year {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .year {
+    font-weight: 900;
+    font-size: 150px;
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+    color: var(--accent);
+  }
+  .cap { width: 139px; height: 249px; margin-bottom: 6px; }
+  .hero-name { display: flex; flex-direction: column; gap: 8px; }
+  .invite-line { font-size: 17px; line-height: 1.5; }
+  h1 {
+    font-weight: 900;
+    font-size: 42px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .note { font-size: 18px; line-height: 1.6; text-wrap: pretty; }
+
+  .details { display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
+  .row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    column-gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--ink);
+  }
+  .row-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 4px;
+  }
+  .row-main { font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .row-sub { margin-top: 2px; font-size: 16px; line-height: 1.5; }
+
+  .directions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    padding: 0 20px;
+    background: var(--accent);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: filter 0.15s;
+  }
+  .directions:hover { filter: brightness(0.85); }
+  .directions:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  footer {
+    background: var(--ink);
+    color: #FFFFFF;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .footer-title {
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+  .footer-sub { font-size: 15px; color: #D9D9D9; }
+
+  /* Màn hình rất hẹp (≤ 340px) */
+  @media (max-width: 340px) {
+    .year { font-size: 120px; }
+    .cap { width: 100px; height: 180px; }
+    h1 { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="wrap">
+
+    <header class="topbar">
+      <p class="label">FPT UNIVERSITY</p>
+      <p class="label">KHÓA 18</p>
+    </header>
+
+    <section class="hero">
+      <div class="hero-year">
+        <div class="year">20<br>26</div>
+        <svg class="cap" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4 L22 9 L12 14 L2 9 Z"/><path d="M6 11 V16 C6 18 18 18 18 16 V11"/><path d="M22 9 V15"/>
+        </svg>
+      </div>
+      <div class="hero-name">
+        <p class="invite-line">Mời Hữu Phát đến chung vui lễ tốt nghiệp của</p>
+        <h1>Huỳnh Anh Dũng</h1>
+      </div>
+    </section>
+
+    <p class="note">Phát ơi, Dũng chính thức ra trường rồi! Ghé chung vui với mình nha, hứa có ảnh đẹp và nhiều chuyện để kể.</p>
+
+    <section class="details">
+      <div class="row">
+        <p class="row-label">Ngày</p>
+        <div>
+          <p class="row-main">Chủ Nhật, ngày 8 tháng 11, 2026</p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="row-label">Vào Lúc</p>
+        <div>
+          <p class="row-sub">Giờ sẽ được cập nhật sớm</p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="row-label">Địa điểm</p>
+        <div>
+          <p class="row-main">Đại học FPT</p>
+          <p class="row-sub">7 Đường D1, Phường Tăng Nhơn Phú (Quận 9 cũ), Hồ Chí Minh</p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="row-label">Lưu ý</p>
+        <p class="row-sub" style="margin-top:0">Liên hệ Dũng để</p>
+      </div>
+    </section>
+
+    <a class="directions" href="https://maps.app.goo.gl/J4xDimgZXQibA4kM6" target="_blank" rel="noopener">
+      <span>Chỉ đường</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 H19"/><path d="M13 6 L19 12 L13 18"/></svg>
+    </a>
+
+    <footer>
+      <p class="footer-title">Hẹn gặp Hữu Phát nhé!</p>
+      <p class="footer-sub">Huỳnh Anh Dũng · Khóa 18</p>
+      <p class="footer-sub">SĐT: 0839451790</p>
+    </footer>
+
+  </div>
+</main>
+</body>
+</html>
