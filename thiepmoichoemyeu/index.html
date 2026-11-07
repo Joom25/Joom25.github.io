@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Thiệp mời dành riêng cho em</title>
+<meta name="description" content="Thiệp mời đặc biệt · Chỉ 1 bản · Dành riêng cho Mỹ Thuận">
+<meta property="og:title" content="Thiệp mời dành riêng cho em">
+<meta property="og:description" content="Thiệp mời đặc biệt · Chỉ 1 bản">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #C2185B;   /* màu chủ đạo — thử #B3261E, #6D3FC0, #1F3BEA */
+    --tint: #FCE8EF;     /* nền nhạt đi kèm — #FBEAE8, #F0EAFB, #E9EDFE */
+    --ink: #1A1114;
+    --muted: #5C4A50;
+    --paper: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  p, h1, h2, h3 { margin: 0; }
+
+  main { padding: 24px 20px 40px; }
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .script { font-family: 'Dancing Script', cursive; }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 10px;
+  }
+  .label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Hero */
+  .hero { display: flex; flex-direction: column; gap: 18px; }
+  .hero-for {
+    font-size: 15px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .hero-name {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  }
+  h1 {
+    font-weight: 900; font-size: 64px; line-height: 1.08; letter-spacing: -0.03em;
+    text-transform: uppercase; color: var(--accent); text-wrap: balance;
+  }
+  .heart { flex: none; margin-bottom: 8px; }
+  .hero-line { font-size: 20px; line-height: 1.55; text-wrap: pretty; }
+  .hero-ask { font-size: 30px; line-height: 1.3; color: var(--accent); }
+
+  /* Section headings */
+  h2 {
+    font-weight: 900; font-size: 26px; line-height: 1.25; text-transform: uppercase;
+  }
+  .section { display: flex; flex-direction: column; gap: 16px; }
+  .section-head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    border-top: 2px solid var(--ink); padding-top: 14px;
+  }
+  .hint { font-size: 13px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+
+  /* Numbers */
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .stat { background: var(--tint); padding: 18px 16px; display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-weight: 900; font-size: 40px; line-height: 1.05; letter-spacing: -0.03em; color: var(--accent);
+  }
+  .stat-label { font-size: 15px; line-height: 1.4; }
+
+  /* Moments carousel */
+  .swipe {
+    display: flex; gap: 12px; overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin: 0 -20px; padding: 0 20px 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .swipe::-webkit-scrollbar { display: none; }
+  .card {
+    flex: 0 0 78%; scroll-snap-align: start;
+    border: 2px solid var(--ink); padding: 20px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card-num { font-weight: 900; font-size: 44px; line-height: 1; color: var(--accent); }
+  .card-meta {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  h3 { font-size: 20px; font-weight: 700; line-height: 1.35; }
+  .card-text { font-size: 16px; line-height: 1.55; }
+
+  /* Letter */
+  .letter-section { border-top: 2px solid var(--ink); padding-top: 14px; }
+  .letter-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; min-height: 56px; padding: 0 20px;
+    border: 2px solid var(--ink); background: var(--ink); color: #FFFFFF;
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+  }
+  .letter-btn[aria-expanded="true"] { background: var(--paper); color: var(--ink); }
+  .letter-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .letter {
+    background: var(--tint); padding: 26px 22px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .letter[hidden] { display: none; }
+  .letter-hi { font-size: 32px; line-height: 1.3; color: var(--accent); }
+  .letter p.body { font-size: 17px; line-height: 1.7; text-wrap: pretty; }
+  .letter-sign { margin-top: 6px; font-size: 28px; line-height: 1.3; text-align: right; }
+
+  /* Details */
+  .details { display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
+  .details h2 { margin: 14px 0 6px; }
+  .row {
+    display: grid; grid-template-columns: 100px 1fr; column-gap: 14px;
+    padding: 16px 0; border-bottom: 1px solid var(--ink);
+  }
+  .row-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent); padding-top: 4px;
+  }
+  .row-main { font-size: 18px; font-weight: 700; line-height: 1.4; }
+  .row-sub { margin-top: 2px; font-size: 16px; line-height: 1.5; }
+  .row-text { font-size: 16px; line-height: 1.5; }
+
+  /* Directions button */
+  .directions {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 56px; padding: 0 20px;
+    background: var(--accent); color: #FFFFFF;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none;
+    transition: filter 0.15s;
+  }
+  .directions:hover { filter: brightness(0.88); }
+  .directions:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  /* Footer */
+  footer {
+    background: var(--ink); color: #FFFFFF; padding: 28px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .footer-title { font-size: 34px; line-height: 1.25; }
+  .footer-sub { font-size: 15px; color: #E3D6DA; }
+
+  /* Very narrow phones */
+  @media (max-width: 340px) {
+    h1 { font-size: 48px; }
+    .stat-num { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="wrap">
+
+    <header class="topbar">
+      <p class="label">Thiệp mời đặc biệt</p>
+      <p class="label">Chỉ 1 bản</p>
+    </header>
+
+    <section class="hero">
+      <p class="hero-for">Dành riêng cho</p>
+      <div class="hero-name">
+        <h1>MỸ THUẬN</h1>
+        <svg class="heart" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#1A1114" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5 C12 20.5 3.5 15.2 3.5 9.2 A4.6 4.6 0 0 1 12 6.6 A4.6 4.6 0 0 1 20.5 9.2 C20.5 15.2 12 20.5 12 20.5 Z"/></svg>
+      </div>
+      <p class="hero-line">Ngày anh chính thức trưởng thành, anh muốn được em chúc mừng đầu tiên.</p>
+      <p class="hero-ask script">Em đến nhé?</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Chúng mình bằng những con số</h2></div>
+      <div class="stats">
+        <div class="stat"><p class="stat-num">140</p><p class="stat-label">ngày bên nhau</p></div>
+        <div class="stat"><p class="stat-num">n+1</p><p class="stat-label">lần em lắng nghe anh</p></div>
+        <div class="stat"><p class="stat-num">n^n</p><p class="stat-label">lần em thấu hiểu anh</p></div>
+        <div class="stat"><p class="stat-num">∞</p><p class="stat-label">lần em nói “cố lên anh”</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Những khoảnh khắc</h2>
+        <p class="hint">Vuốt ngang →</p>
+      </div>
+      <div class="swipe" tabindex="0" aria-label="Những khoảnh khắc, vuốt ngang để xem">
+        <article class="card">
+          <p class="card-num">01</p>
+          <p class="card-meta">03/2026 · Núi Dinh</p>
+          <h3>Lần đầu mình gặp nhau</h3>
+          <p class="card-text">"Chắc chị dán cái mỏ em lại quá", chưa gì lần đầu tiên gặp đã để lại ấn tượng khó phai òi.</p>
+        </article>
+        <article class="card">
+          <p class="card-num">02</p>
+          <p class="card-meta">Tháng 6/2026</p>
+          <h3>Chinh phục các núi miền Nam</h3>
+          <p class="card-text">Những ngày chúng mình mới biết nhau, những ngọn núi là nơi hiểu rõ tình mình nhất.</p>
+        </article>
+        <article class="card">
+          <p class="card-num">03</p>
+          <p class="card-meta">Bắt đầu với những dự án mới</p>
+          <h3>Hai đứa mình và công việc mới</h3>
+          <p class="card-text">Công việc bắt đầu nhiều và mới lạ, đi kèm những thử thách. Anh và em đều vượt qua. Vẫn còn nhớ rõ đêm tối ấy.</p>
+        </article>
+        <article class="card">
+          <p class="card-num">04</p>
+          <p class="card-meta">Anh hôm nay</p>
+          <h3>Ngày trước lễ tốt nghiệp</h3>
+          <p class="card-text">Cảm ơn em vì vẫn ở bên anh. Sau bao nhiêu điều, sau mỗi thử thách, mình lại có câu chuyện hay để kể cho con cháu của hai đứa mình</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section letter-section">
+      <h2>Thư gửi em</h2>
+      <button type="button" class="letter-btn" id="letterBtn" aria-expanded="false" aria-controls="letter">
+        <span id="letterLabel">Mở thư</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7 L12 13 L21 7"/></svg>
+      </button>
+      <div class="letter" id="letter" hidden>
+        <p class="letter-hi script">Mèo ới ơi,</p>
+        <p class="body">Cảm ơn em đã đến với anh. Anh giờ ngồi đây, trân trọng mọi thứ với em.</p>
+        <p class="body">Anh vẫn nhớ kỹ đêm tối, mình băng đường khuya để rước nhau về. Ngồi kể chuyện cuộc đời cho nhau nghe. Và anh gỡ được mặc cảm của anh.</p>
+        <p class="body">Anh mong mình vẫn sẽ chia sẻ cho nhau mọi điều. Anh thương em nhiều lắm, Mỹ Thuận à. Cứ mãi yêu em thôi.</p>
+        <p class="letter-sign script">Bò của Mèo</p>
+      </div>
+    </section>
+
+    <section class="details">
+      <h2>Hẹn em ở đây</h2>
+      <div class="row">
+        <p class="row-label">Thời gian</p>
+        <div>
+          <p class="row-main">Chủ Nhật, ngày 8 tháng 11 năm 2026</p>
+          <p class="row-sub">9:00 AM</p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="row-label">Địa điểm</p>
+        <div>
+          <p class="row-main">Đại học FPT</p>
+          <p class="row-sub">7 Đường D1, Phường Tăng Nhơn Phú (Quận 9 cũ), Hồ Chí Minh</p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="row-label">Chỗ hẹn</p>
+        <p class="row-text">Ở tượng Self-made man. Anh sẽ kể em nghe về phần đời anh.</p>
+      </div>
+      <div class="row">
+        <p class="row-label">Lời nhắn</p>
+        <p class="row-text">Em không cần mang gì cả. Chỉ cần em đến là đủ.</p>
+      </div>
+    </section>
+
+    <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=%C4%90%E1%BA%A1i+h%E1%BB%8Dc+FPT+7+%C4%90%C6%B0%E1%BB%9Dng+D1+Th%E1%BB%A7+%C4%90%E1%BB%A9c+H%E1%BB%93+Ch%C3%AD+Minh" target="_blank" rel="noopener">
+      <span>Chỉ đường cho em</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 H19"/><path d="M13 6 L19 12 L13 18"/></svg>
+    </a>
+
+    <footer>
+      <p class="footer-title script">Hẹn gặp em nhé!</p>
+      <p class="footer-sub">Huỳnh Anh Dũng · Khóa 18 · Đại học FPT</p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+  // Mở / gấp thư
+  (function () {
+    var btn = document.getElementById('letterBtn');
+    var label = document.getElementById('letterLabel');
+    var letter = document.getElementById('letter');
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      letter.hidden = !open;
+      label.textContent = open ? 'Gấp thư lại' : 'Mở thư';
+    });
+  })();
+</script>
+</body>
+</html>
